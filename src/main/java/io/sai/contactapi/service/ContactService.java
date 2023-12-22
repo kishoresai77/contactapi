@@ -41,9 +41,10 @@ public class ContactService {
          contactRepo.delete(contact);
      }
      public String uploadPhoto(String id, MultipartFile file) {
-        log.info("saving picture for suer ID: {}",id);
+        log.info("saving picture for user ID: {}",id);
         Contact contact =getContact(id);
         String photoUrl=photoFunctison.apply(id,file);
+        log.info("photoUrl"+photoUrl);
         contact.setPhotoUrl(photoUrl);
         contactRepo.save(contact);
         return photoUrl;
@@ -53,7 +54,7 @@ public class ContactService {
      private final BiFunction<String ,MultipartFile,String> photoFunctison = (id,image) ->{
          String filename= id + fileExtension.apply(image.getOriginalFilename());
         try{
-            Path fileStorageLocation = Paths.get(" PHOTO_DIRECTORY ").toAbsolutePath().normalize();
+            Path fileStorageLocation = Paths.get("PHOTO_DIRECTORY ").toAbsolutePath().normalize();
              if(!Files.exists(fileStorageLocation))
                 {Files.createDirectories(fileStorageLocation);}
              Files.copy(image.getInputStream(),fileStorageLocation.resolve(filename),REPLACE_EXISTING);
