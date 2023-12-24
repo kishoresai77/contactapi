@@ -1,5 +1,6 @@
 package io.sai.contactapi.service;
 
+import io.sai.contactapi.constant.Constant;
 import io.sai.contactapi.domain.Contact;
 import io.sai.contactapi.repo.ContactRepo;
 import jakarta.transaction.Transactional;
@@ -34,6 +35,7 @@ public class ContactService {
         return contactRepo.findById(id).orElseThrow(() -> new RuntimeException("contact not found"));
      }
      public Contact createContact(Contact contact) {
+        //contact.setPhotoUrl(Constant.PHOTO_DIRECTORY);
         return contactRepo.save(contact);
      }
      public void deletContact(Contact contact){
@@ -54,7 +56,7 @@ public class ContactService {
      private final BiFunction<String ,MultipartFile,String> photoFunctison = (id,image) ->{
          String filename= id + fileExtension.apply(image.getOriginalFilename());
         try{
-            Path fileStorageLocation = Paths.get("PHOTO_DIRECTORY ").toAbsolutePath().normalize();
+            Path fileStorageLocation = Paths.get(Constant.PHOTO_DIRECTORY).toAbsolutePath().normalize();
              if(!Files.exists(fileStorageLocation))
                 {Files.createDirectories(fileStorageLocation);}
              Files.copy(image.getInputStream(),fileStorageLocation.resolve(filename),REPLACE_EXISTING);
